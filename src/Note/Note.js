@@ -6,6 +6,12 @@ import ApiContext from '../ApiContext';
 import './Note.css';
 
 export default class Note extends React.Component {
+  // static defaultProps = {
+  //   history: {
+  //     goBack: () => {}
+  //   }
+  // }
+
   static contextType = ApiContext;
   //handle delete function with fetch request using delete method
 
@@ -18,7 +24,11 @@ export default class Note extends React.Component {
           <Link to={`/note/${id}`}>{name}</Link>
         </h2>
         <button
-          onClick={() => handleDeleteNote(id)}
+          onClick={() => {
+            this.props.history.push(`/`);
+            handleDeleteNote(id)
+          }
+          }
           className="Note__delete"
           type="button">
           <FontAwesomeIcon icon="trash-alt" /> remove
