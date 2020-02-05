@@ -61,6 +61,7 @@ class App extends Component {
         // setTimeout(() => this.setState(dummyStore), 600);
     }
 
+
     renderNavRoutes() {
         const {notes, folders} = this.state;
         

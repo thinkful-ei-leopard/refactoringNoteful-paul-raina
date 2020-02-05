@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Note from '../Note/Note'
 import CircleButton from '../CircleButton/CircleButton'
+import { getNotesForFolder } from '../notes-helpers'
 import './NoteListMain.css'
 import ApiContext from '../ApiContext'
  
@@ -12,12 +13,14 @@ class NoteListMain extends React.Component {
   static contextType = ApiContext;
   
   render() {
-    const { notes } = this.context 
+    const { folderId } = this.props.match.params
+    const { notes=[] } = this.context
+    const notesForFolder = getNotesForFolder(notes, folderId)
 
     return (
       <section className='NoteListMain'>
         <ul>
-          {notes.map(note =>
+          {notesForFolder.map(note =>
             <li key={note.id}>
               <Note
                 id={note.id}

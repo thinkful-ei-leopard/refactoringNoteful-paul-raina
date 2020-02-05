@@ -2,16 +2,28 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import CircleButton from '../CircleButton/CircleButton'
 import './NotePageNav.css'
+import ApiContext from '../ApiContext'
+import {findFolder, findNote} from '../notes-helpers'
 
 class NotePageNav extends React.Component {
   static defaultProps = {
     history: {
       goBack: () => {}
+    },
+
+    match: {
+      params: {}
     }
   }
 
+  static contextType = ApiContext
+  // const {noteId} = routeProps.match.params;
+
   render() {
-    const { folder } = this.context
+    const { notes, folders} = this.context
+    const { noteId } = this.props.match.params
+    const note = findNote(notes, noteId) || {}
+    const folder = findFolder(folders, note.folderId)
     return (
       <div className='NotePageNav'>
         <CircleButton
