@@ -6,7 +6,7 @@ const ApiContext = React.createContext({
   addFolders: () => {},
   addNotes: () => {},
   deleteNote: () => {},
-  handleDelete: () => {}
+  handleDeleteNote: () => {}
 })
 
 export default ApiContext

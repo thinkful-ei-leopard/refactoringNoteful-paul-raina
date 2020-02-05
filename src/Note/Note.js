@@ -10,7 +10,7 @@ export default class Note extends React.Component {
   //handle delete function with fetch request using delete method
 
   render() {
-    const { handleDelete } = this.context;
+    const { handleDeleteNote } = this.context;
     const { id, name, modified } = this.props;
     return (
       <div className="Note">
@@ -18,7 +18,7 @@ export default class Note extends React.Component {
           <Link to={`/note/${id}`}>{name}</Link>
         </h2>
         <button
-          onClick={() => handleDelete(id)}
+          onClick={() => handleDeleteNote(id)}
           className="Note__delete"
           type="button">
           <FontAwesomeIcon icon="trash-alt" /> remove

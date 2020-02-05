@@ -5,7 +5,6 @@ import NoteListNav from '../NoteListNav/NoteListNav';
 import NotePageNav from '../NotePageNav/NotePageNav';
 import NoteListMain from '../NoteListMain/NoteListMain';
 import NotePageMain from '../NotePageMain/NotePageMain';
-import dummyStore from '../dummy-store';
 import {getNotesForFolder, findNote, findFolder} from '../notes-helpers';
 import './App.css';
 import ApiContext from '../ApiContext'
@@ -17,9 +16,49 @@ class App extends Component {
     };
 
     static contextType = ApiContext
+
     componentDidMount() {
+        const API_ENDPOINT = 'http://localhost:9090'
+
+        fetch(`${API_ENDPOINT}/folders`)
+        .then(res => {
+            if (!res.ok) {
+              // get the error message from the response,
+              throw new Error('there was an error');
+            }
+            return res.json()
+          })
+          .then((data) => {
+              this.setState({
+                  folders: data
+              })
+          })
+          .catch(err => {
+            console.error()
+        })
+
+        fetch(`${API_ENDPOINT}/notes`)
+        .then(res => {
+            if (!res.ok) {
+              // get the error message from the response,
+              throw new Error('there was an error');
+            }
+            return res.json()
+          })
+          .then((data) => {
+              this.setState({
+                  notes: data
+              })
+          })
+          .catch(err => {
+            console.error()
+        })
+
+        
+
+
         // fake date loading from API call
-        setTimeout(() => this.setState(dummyStore), 600);
+        // setTimeout(() => this.setState(dummyStore), 600);
     }
 
     renderNavRoutes() {
@@ -65,7 +104,7 @@ class App extends Component {
             })
           }
 
-    handleDelete = (noteId) => {
+    handleDeleteNote = (noteId) => {
         const API_ENDPOINT = 'http://localhost:9090'
 
         fetch(`${API_ENDPOINT}/notes/${noteId}`, {
@@ -136,7 +175,7 @@ class App extends Component {
                 addFolders: this.handleAddFolders,
                 addNotes: this.handleAddNotes,
                 deleteNote: this.deleteNote,
-                handleDelete: this.handleDelete
+                handleDeleteNote: this.handleDeleteNote
             }}>
                 <div className="App">
                     <nav className="App__nav">{this.renderNavRoutes()}</nav>
