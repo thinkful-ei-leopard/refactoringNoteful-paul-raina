@@ -12,7 +12,7 @@ class NotePageMain extends React.Component {
   static contextType = ApiContext
 
   render() {
-    const { note } = this.context
+    const { note } = this.props
     return (
       <section className='NotePageMain'>
         <Note

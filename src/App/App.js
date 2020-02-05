@@ -56,10 +56,16 @@ class App extends Component {
         );
     }
 
-    
+    deleteNote = noteId => {
+            const newNotes = this.state.notes.filter(note =>
+              note.id !== noteId
+            )
+            this.setState({
+              notes: newNotes
+            })
+          }
 
-    handleDelete= (event, noteId) => {
-        event.preventDefault()
+    handleDelete = (noteId) => {
         const API_ENDPOINT = 'http://localhost:9090'
 
         fetch(`${API_ENDPOINT}/notes/${noteId}`, {
@@ -78,8 +84,8 @@ class App extends Component {
             }
             return res.json()
           })
-          .then(data => {
-              this.context.handleDelete(noteId)
+          .then(() => {
+              this.deleteNote(noteId)
           })
           .catch(err => {
               console.error()
@@ -129,7 +135,8 @@ class App extends Component {
                 folders: this.state.folders,
                 addFolders: this.handleAddFolders,
                 addNotes: this.handleAddNotes,
-                deleteNote: this.handleDelete
+                deleteNote: this.deleteNote,
+                handleDelete: this.handleDelete
             }}>
                 <div className="App">
                     <nav className="App__nav">{this.renderNavRoutes()}</nav>
