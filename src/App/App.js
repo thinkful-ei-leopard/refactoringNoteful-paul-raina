@@ -8,6 +8,7 @@ import NotePageMain from '../NotePageMain/NotePageMain';
 import dummyStore from '../dummy-store';
 import {getNotesForFolder, findNote, findFolder} from '../notes-helpers';
 import './App.css';
+import ApiContext from '../ApiContext'
 
 class App extends Component {
     state = {
@@ -15,6 +16,7 @@ class App extends Component {
         folders: []
     };
 
+    static contextType = ApiContext
     componentDidMount() {
         // fake date loading from API call
         setTimeout(() => this.setState(dummyStore), 600);
@@ -22,6 +24,7 @@ class App extends Component {
 
     renderNavRoutes() {
         const {notes, folders} = this.state;
+        
         return (
             <>
                 {['/', '/folder/:folderId'].map(path => (
@@ -52,6 +55,36 @@ class App extends Component {
             </>
         );
     }
+
+    
+
+    handleDelete= (event, noteId) => {
+        event.preventDefault()
+        const API_ENDPOINT = 'http://localhost:9090'
+
+        fetch(`${API_ENDPOINT}/notes/${noteId}`, {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        } )
+        .then(res => {
+            if (!res.ok) {
+              // get the error message from the response,
+              return res.json().then(error => {
+                // then throw it
+                throw error
+              })
+            }
+            return res.json()
+          })
+          .then(data => {
+              this.context.handleDelete(noteId)
+          })
+          .catch(err => {
+              console.error()
+          })
+    }   
 
     renderMainRoutes() {
         const {notes, folders} = this.state;
@@ -89,18 +122,26 @@ class App extends Component {
         );
     }
 
-    render() {
+    render() { 
         return (
-            <div className="App">
-                <nav className="App__nav">{this.renderNavRoutes()}</nav>
-                <header className="App__header">
-                    <h1>
-                        <Link to="/">Noteful</Link>{' '}
-                        <FontAwesomeIcon icon="check-double" />
-                    </h1>
-                </header>
-                <main className="App__main">{this.renderMainRoutes()}</main>
-            </div>
+            <ApiContext.Provider value={{
+                notes: this.state.notes,
+                folders: this.state.folders,
+                addFolders: this.handleAddFolders,
+                addNotes: this.handleAddNotes,
+                deleteNote: this.handleDelete
+            }}>
+                <div className="App">
+                    <nav className="App__nav">{this.renderNavRoutes()}</nav>
+                    <header className="App__header">
+                        <h1>
+                            <Link to="/">Noteful</Link>{' '}
+                            <FontAwesomeIcon icon="check-double" />
+                        </h1>
+                    </header>
+                    <main className="App__main">{this.renderMainRoutes()}</main>
+                </div>
+            </ApiContext.Provider>
         );
     }
 }
